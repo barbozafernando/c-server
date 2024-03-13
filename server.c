@@ -1,17 +1,20 @@
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/socket.h>
 #include <string.h>
-#include <fcntl.h>
 #include <sys/sendfile.h>
+#include <sys/socket.h>
 #include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
-#define RESPONSE_BUFFER_LENGTH 256
+#define SERVER_PORT 8080
+#define REQUEST_BUFFER_LENGTH 1024
+#define RESPONSE_BUFFER_LENGTH 1024
+#define MAX_QUEUED_REQUESTS 10
 
-const char* get_filename_from_response(char* buf) {
-  char* f = buf + 5;
+const char *get_filename_from_response(char *buf) {
+  char *f = buf + 5;
   *strchr(f, ' ') = 0;
 
   return f;
@@ -19,29 +22,37 @@ const char* get_filename_from_response(char* buf) {
 
 int main() {
   int s = socket(AF_INET, SOCK_STREAM, 0);
-  uint16_t PORT = htons(8080);
+  uint16_t PORT = htons(SERVER_PORT);
 
-  struct sockaddr_in addr = {
-    AF_INET,
-    PORT,
-    {0}
-  };
+  struct sockaddr_in addr = {AF_INET, PORT, {0}};
 
-  bind(s, (const struct sockaddr*)&addr, sizeof(addr));
-  listen(s, 10);
-  
+  (void)bind(s, (const struct sockaddr *)&addr, sizeof(addr));
+  listen(s, MAX_QUEUED_REQUESTS);
+
+  fprintf(stdout, "Listening on port: %d\n", SERVER_PORT);
+
   int client_fd = accept(s, 0, 0);
 
+  char request_buffer[REQUEST_BUFFER_LENGTH] = {0};
   char response_buffer[RESPONSE_BUFFER_LENGTH] = {0};
-  recv(client_fd, response_buffer, RESPONSE_BUFFER_LENGTH, 0);
+  char http_header[4096] = "HTTP/1.1 200 OK\r\n\r\n";
 
-  const char* filename = get_filename_from_response(response_buffer);
+  recv(client_fd, request_buffer, REQUEST_BUFFER_LENGTH, 0);
+
+  const char *filename = get_filename_from_response(request_buffer);
   int fd = open(filename, O_RDONLY);
-  sendfile(client_fd, fd, 0, RESPONSE_BUFFER_LENGTH);
+  int fd2 = read(fd, response_buffer, RESPONSE_BUFFER_LENGTH);
+  strcat(http_header, response_buffer);
+  strcat(http_header, "\r\n\r\n");
+  strcpy(response_buffer, http_header);
+  send(client_fd, response_buffer, RESPONSE_BUFFER_LENGTH, 0);
 
+  printf("response:%s\n", response_buffer);
+
+  close(s);
   close(fd);
+  close(fd2);
   close(client_fd);
-  close(atoi(filename));
 
-  return 0;
+  return EXIT_SUCCESS;
 }
