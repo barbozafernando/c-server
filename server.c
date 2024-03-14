@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define SERVER_PORT 8080
+#define SERVER_PORT 3000
 #define REQUEST_BUFFER_LENGTH 1024
 #define RESPONSE_BUFFER_LENGTH 1024
 #define MAX_QUEUED_REQUESTS 10
@@ -34,8 +34,8 @@ int main() {
   int client_fd = accept(s, 0, 0);
 
   char request_buffer[REQUEST_BUFFER_LENGTH] = {0};
-  char response_buffer[RESPONSE_BUFFER_LENGTH] = {0};
-  char http_header[4096] = "HTTP/1.1 200 OK\r\n\r\n";
+  char response_buffer[] = {0};
+  char http_header[1024] = "HTTP/1.1 200 OK\r\n\r\n";
 
   recv(client_fd, request_buffer, REQUEST_BUFFER_LENGTH, 0);
 
@@ -45,7 +45,7 @@ int main() {
   strcat(http_header, response_buffer);
   strcat(http_header, "\r\n\r\n");
   strcpy(response_buffer, http_header);
-  send(client_fd, response_buffer, RESPONSE_BUFFER_LENGTH, 0);
+  send(client_fd, response_buffer, strlen(response_buffer), 0);
 
   printf("response:%s\n", response_buffer);
 
