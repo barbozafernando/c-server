@@ -9,14 +9,8 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "utils.h"
-
-const char *get_filename_from_request(char *buf) {
-  char *f = buf + 5;
-  *strchr(f, ' ') = 0;
-
-  return f;
-}
+#include "http.h"
+#include "file.h"
 
 char *get_http_verb(char *request) {
   char *ptr_verb = calloc(6, sizeof(char) * 6);
@@ -32,19 +26,6 @@ char *get_http_verb(char *request) {
 
   return ptr_verb;
 }
-
-char *read_file(const char *filename) {
-  char *ptr_buf = calloc(65536, sizeof(char));
-  int fd = open(filename, O_RDONLY);
-  int bytes_read = read(fd, ptr_buf, 65536); // 64K
-
-  if (bytes_read < 0) {
-    perror("read_file");
-    exit(EXIT_FAILURE);
-  }
-
-  return ptr_buf;
-};
 
 char *generate_response(char *contents, char* verb) {
   char *header = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n";
