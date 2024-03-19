@@ -16,14 +16,21 @@ const char *get_filename_from_request(char *buf) {
 }
 
 char *read_file(const char *filename) {
-  char *ptr_buf = calloc(65536, sizeof(char));
-  int fd = open(filename, O_RDONLY);
-  int bytes_read = read(fd, ptr_buf, 65536); // 64K
+  char *ptr_buf = calloc(FILE_MAX_SIZE, sizeof(char));
+
+  if (!ptr_buf) {
+    perror("read_file");
+    exit(EXIT_FAILURE);
+  }
+
+  int fd         = open(filename, O_RDONLY);
+  int bytes_read = read(fd, ptr_buf, FILE_MAX_SIZE);
 
   if (bytes_read < 0) {
     perror("read_file");
     exit(EXIT_FAILURE);
   }
 
+  fprintf(stdout, "%d bytes read.\n", bytes_read);
   return ptr_buf;
 };

@@ -28,8 +28,14 @@ char *get_http_verb(char *request) {
 }
 
 char *generate_response(char *contents, char* verb) {
-  char *header = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n";
-  char *ptr_response = calloc(strlen(contents) + strlen(header), sizeof(char));
+  char *header         = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n";
+  size_t response_size = strlen(contents) + strlen(header);
+  char *ptr_response   = calloc(response_size, sizeof(char));
+
+  if (!ptr_response) {
+    perror("generate_response");
+    exit(EXIT_FAILURE);
+  }
 
   strcat(ptr_response, header);
   strcat(ptr_response, contents);
@@ -48,22 +54,33 @@ void send_response(int fd, char *response, int response_length) {
 }
 
 void handle_http_request(int fd) {
-  char request[REQUEST_BUFFER_SIZE];
+  char *ptr_request = calloc(REQUEST_BUFFER_SIZE, sizeof(char));
 
-  int bytes_recvd = recv(fd, request, REQUEST_BUFFER_SIZE - 1, 0);
+  if (!ptr_request) {
+    perror("handle_http_request");
+    exit(EXIT_FAILURE);
+  }
+
+  int bytes_recvd = recv(fd, ptr_request, REQUEST_BUFFER_SIZE - 1, 0);
 
   if (bytes_recvd < 0) {
     perror("recv");
     exit(EXIT_FAILURE);
   }
 
-  char *verb = get_http_verb(request);
-  char *file_content = {0};
-  char *response = {0};
+  char *verb         = get_http_verb(ptr_request);
+  char *file_content = calloc(FILE_MAX_SIZE, sizeof(char));
+
+  if (!file_content) {
+    perror("handle_http_request");
+    exit(EXIT_FAILURE);
+  }
+
+  char *response       = {0};
   const char *filename = {0};
 
   if (strcmp(verb, "GET") == 0) {
-    filename     = get_filename_from_request(request);
+    filename     = get_filename_from_request(ptr_request);
     file_content = read_file(filename);
     response     = generate_response(file_content, "GET");
 
@@ -75,4 +92,5 @@ void handle_http_request(int fd) {
   free(verb);
   free(file_content);
   free(response);
+  free(ptr_request);
 }
