@@ -8,17 +8,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define SERVER_PORT 3000
-#define REQUEST_BUFFER_LENGTH 1024
-#define RESPONSE_BUFFER_LENGTH 1024
-#define MAX_QUEUED_REQUESTS 10
-
-const char *get_filename_from_response(char *buf) {
-  char *f = buf + 5;
-  *strchr(f, ' ') = 0;
-
-  return f;
-}
+#include "utils.h"
 
 int main() {
   int s = socket(AF_INET, SOCK_STREAM, 0);
@@ -26,32 +16,30 @@ int main() {
 
   struct sockaddr_in addr = {AF_INET, PORT, {0}};
 
-  (void)bind(s, (const struct sockaddr *)&addr, sizeof(addr));
+  bind(s, (const struct sockaddr *)&addr, sizeof(addr));
   listen(s, MAX_QUEUED_REQUESTS);
 
   fprintf(stdout, "Listening on port: %d\n", SERVER_PORT);
 
   int client_fd = accept(s, 0, 0);
 
-  char request_buffer[REQUEST_BUFFER_LENGTH] = {0};
-  char response_buffer[] = {0};
-  char http_header[1024] = "HTTP/1.1 200 OK\r\n\r\n";
+  handle_http_request(client_fd);
 
-  recv(client_fd, request_buffer, REQUEST_BUFFER_LENGTH, 0);
+  /*
+  recv(client_fd, request_buffer, REQUEST_BUFFER_SIZE, 0);
 
   const char *filename = get_filename_from_response(request_buffer);
   int fd = open(filename, O_RDONLY);
-  int fd2 = read(fd, response_buffer, RESPONSE_BUFFER_LENGTH);
+  int fd2 = read(fd, response_buffer, RESPONSE_BUFFER_SIZE);
   strcat(http_header, response_buffer);
   strcat(http_header, "\r\n\r\n");
-  strcpy(response_buffer, http_header);
-  send(client_fd, response_buffer, strlen(response_buffer), 0);
+  send(client_fd, http_header, strlen(http_header), 0);
 
-  printf("response:%s\n", response_buffer);
-
-  close(s);
   close(fd);
   close(fd2);
+  */
+
+  close(s);
   close(client_fd);
 
   return EXIT_SUCCESS;
