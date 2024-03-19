@@ -1,5 +1,5 @@
-#ifndef _UTILS_H_
-#define _UTILS_H_
+#ifndef _HTTP_H_
+#define _HTTP_H_
 
 #define SERVER_PORT          3000
 #define REQUEST_BUFFER_SIZE  65536 // 64K
