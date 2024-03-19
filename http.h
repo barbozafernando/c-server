@@ -12,10 +12,9 @@ enum HTTP_STATUS_CODE {
   NOT_FOUND = 404,
 };
 
-const char *get_filename_from_request(char *buf);
 void handle_http_request(int fd);
-char *read_file(const char *filename);
 char *generate_response(char *contents, char* verb);
-void handle_http_request(int fd);
+char *get_http_verb(char *request);
+void send_response(int fd, char *response, int response_length);
 
 #endif
