@@ -63,9 +63,9 @@ void handle_http_request(int fd) {
   const char *filename = {0};
 
   if (strcmp(verb, "GET") == 0) {
-    filename = get_filename_from_request(request);
+    filename     = get_filename_from_request(request);
     file_content = read_file(filename);
-    response = generate_response(file_content, "GET");
+    response     = generate_response(file_content, "GET");
 
     send_response(fd, response, strlen(response));
   } else {
