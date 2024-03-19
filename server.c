@@ -25,20 +25,6 @@ int main() {
 
   handle_http_request(client_fd);
 
-  /*
-  recv(client_fd, request_buffer, REQUEST_BUFFER_SIZE, 0);
-
-  const char *filename = get_filename_from_response(request_buffer);
-  int fd = open(filename, O_RDONLY);
-  int fd2 = read(fd, response_buffer, RESPONSE_BUFFER_SIZE);
-  strcat(http_header, response_buffer);
-  strcat(http_header, "\r\n\r\n");
-  send(client_fd, http_header, strlen(http_header), 0);
-
-  close(fd);
-  close(fd2);
-  */
-
   close(s);
   close(client_fd);
 
