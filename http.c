@@ -12,19 +12,13 @@
 #include "http.h"
 #include "file.h"
 
-char *get_http_verb(char *request) {
-  char *ptr_verb = calloc(6, sizeof(char) * 6);
-
-  if (!ptr_verb) {
-    perror("get_http_verb");
-    exit(1);
+char *get_http_verb(char *request, char *buf) {
+  size_t i;
+  for (i = 0; request[i] != ' '; ++i) {
+    buf[i] = request[i];
   }
 
-  for (size_t i = 0; request[i] != ' '; ++i) {
-    ptr_verb[i] = request[i];
-  }
-
-  return ptr_verb;
+  return buf;
 }
 
 char *generate_response(char *contents, char* verb) {
@@ -68,7 +62,8 @@ void handle_http_request(int fd) {
     exit(EXIT_FAILURE);
   }
 
-  char *verb         = get_http_verb(ptr_request);
+  static char verb[10] = {0};
+  get_http_verb(ptr_request, verb);
   char *file_content = calloc(FILE_MAX_SIZE, sizeof(char));
 
   if (!file_content) {
@@ -89,7 +84,6 @@ void handle_http_request(int fd) {
     perror("verb not implemented yet");
   }
 
-  free(verb);
   free(file_content);
   free(response);
   free(ptr_request);
