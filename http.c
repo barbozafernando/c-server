@@ -1,13 +1,13 @@
-#include <fcntl.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <stdint.h>
+#include <unistd.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <unistd.h>
-#include <string.h>
 
 #include "http.h"
 #include "file.h"
@@ -33,7 +33,6 @@ char *generate_response(char *contents, char* verb) {
 
   strcat(ptr_response, header);
   strcat(ptr_response, contents);
-  strcat(ptr_response, "\r\n");
 
   return ptr_response;
 };
