@@ -23,7 +23,11 @@ char *read_file(const char *filename) {
     exit(EXIT_FAILURE);
   }
 
-  int fd         = open(filename, O_RDONLY);
+  int fd = open(filename, O_RDONLY);
+  if (fd == -1) {
+    perror("file not found");
+  }
+  
   int bytes_read = read(fd, ptr_buf, FILE_MAX_SIZE);
 
   if (bytes_read < 0) {
