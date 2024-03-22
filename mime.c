@@ -11,25 +11,27 @@ char *strlower(char *s) {
   return s;
 }
 
-char *get_mime_type(const char *filename) {
+void get_mime_type(const char *filename, char buf[]) {
   char *ext = strrchr(filename, '.');
 
   if (ext == NULL) {
-      return DEFAULT_MIME_TYPE;
+    strcpy(buf,DEFAULT_MIME_TYPE);
+    return;
   }
   
   ext++;
 
   strlower(ext);
 
-  if (strcmp(ext, "html") == 0 || strcmp(ext, "htm") == 0) { return "text/html"; }
-  if (strcmp(ext, "jpeg") == 0 || strcmp(ext, "jpg") == 0) { return "image/jpg"; }
-  if (strcmp(ext, "css") == 0) { return "text/css"; }
-  if (strcmp(ext, "js") == 0) { return "application/javascript"; }
-  if (strcmp(ext, "json") == 0) { return "application/json"; }
-  if (strcmp(ext, "txt") == 0) { return "text/plain"; }
-  if (strcmp(ext, "gif") == 0) { return "image/gif"; }
-  if (strcmp(ext, "png") == 0) { return "image/png"; }
+  if (strcmp(ext, "html") == 0 || strcmp(ext, "htm") == 0) { strcpy(buf, "text/html"); }
+  if (strcmp(ext, "jpeg") == 0 || strcmp(ext, "jpg") == 0) { strcpy(buf, "image/jpg"); }
+  if (strcmp(ext, "css") == 0) { strcpy(buf, "text/css"); }
+  if (strcmp(ext, "js") == 0) { strcpy(buf, "application/javascript"); }
+  if (strcmp(ext, "json") == 0) { strcpy(buf, "application/json"); }
+  if (strcmp(ext, "txt") == 0) { strcpy(buf, "text/plain"); }
+  if (strcmp(ext, "gif") == 0) { strcpy(buf, "image/gif"); }
+  if (strcmp(ext, "png") == 0) { strcpy(buf, "image/png"); }
 
-  return DEFAULT_MIME_TYPE;
+  if (buf == NULL)
+    strcpy(buf,DEFAULT_MIME_TYPE);
 }

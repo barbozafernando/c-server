@@ -23,9 +23,8 @@ char *get_http_verb(char *request, char *buf) {
 }
 
 char *generate_response(char *contents, char *mime_type, char* verb) {
-  char *header         = "HTTP/1.1 200 OK\r\nContent-Type: ";
-  // strcat(header, mime_type);
-  // strcat(header, "\r\n\r\n");
+  char header[1024]         = "HTTP/1.1 200 OK\r\nContent-Type:";
+  strcat(header, mime_type);
   size_t response_size = strlen(contents) + strlen(header);
   char *ptr_response   = calloc(response_size, sizeof(char));
 
@@ -35,6 +34,7 @@ char *generate_response(char *contents, char *mime_type, char* verb) {
   }
 
   strcat(ptr_response, header);
+  strcat(ptr_response, "\r\n\r\n");
   strcat(ptr_response, contents);
 
   return ptr_response;
@@ -74,13 +74,13 @@ void handle_http_request(int fd) {
   }
 
   char *response       = {0};
-  static char *mime_type      = {0};
+  char mime_type[25]   = {0};
   const char *filename = {0};
 
   if (strcmp(verb, "GET") == 0) {
     filename     = get_filename_from_request(ptr_request);
     file_content = read_file(filename);
-    mime_type    = get_mime_type(filename);
+    get_mime_type(filename, mime_type);
     response     = generate_response(file_content, mime_type, "GET");
 
     send_response(fd, response, strlen(response));
@@ -88,7 +88,7 @@ void handle_http_request(int fd) {
     perror("verb not implemented yet");
   }
 
-  free(file_content);
-  free(response);
-  free(ptr_request);
+  /* free(response); */
+  /* free(ptr_request); */
+  /* free(file_content); */
 }

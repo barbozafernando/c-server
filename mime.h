@@ -3,6 +3,6 @@
 
 #define DEFAULT_MIME_TYPE "application/octet-stream"
 
-char *get_mime_type(const char *filename);
+void get_mime_type(const char *filename, char buf[]);
 
 #endif
