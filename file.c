@@ -11,7 +11,7 @@
 
 const char *get_filename_from_request(char *request) {
   const char* DEFAULT_FILENAME = "index.html";
-  const char *filename = {0};
+  const char *filename = calloc(FILENAME_MAX_SIZE, sizeof(char));
   size_t offset = 5;
 
   char *s = request + offset;
@@ -21,13 +21,14 @@ const char *get_filename_from_request(char *request) {
   }
 
   size_t nbytes = strcspn(s, " ");
-  strncpy((char *)filename, request, nbytes);
+  strncpy((char*)filename, s, nbytes);
 
   return filename;
 }
 
 char *read_file(const char *filename) {
   char *ptr_buf = calloc(FILE_MAX_SIZE, sizeof(char));
+  const char filename_not_found[] = "404.html";
 
   if (!ptr_buf) {
     perror("read_file");
@@ -36,7 +37,14 @@ char *read_file(const char *filename) {
 
   int fd = open(filename, O_RDONLY);
   if (fd == -1) {
-    perror("file not found");
+    int fd = open(filename_not_found, O_RDONLY);
+    int bytes_read = read(fd, ptr_buf, FILE_MAX_SIZE / 2);
+    if (bytes_read < 0) {
+      perror("read_file_404");
+      exit(EXIT_FAILURE);
+    }
+
+    return ptr_buf;
   }
 
   int bytes_read = read(fd, ptr_buf, FILE_MAX_SIZE);
