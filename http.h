@@ -14,7 +14,7 @@ enum HTTP_STATUS_CODE {
 
 void handle_http_request(int fd);
 char *generate_response(char *contents, char* mime_type, char* verb);
-char *get_http_verb(char *request, char *buf);
+void get_http_verb(char *request, char *verb);
 void send_response(int fd, char *response, int response_length);
 
 #endif

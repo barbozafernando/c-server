@@ -1,7 +1,7 @@
-#include <fcntl.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <stdint.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -12,15 +12,15 @@
 #include "http.h"
 #include "mime.h"
 
-char *get_http_verb(char *request, char *buf) {
-  size_t nbytes = strcspn(request, " ");
-  strncpy(buf, request, nbytes);
+#define HEADER_SIZE 1024
 
-  return buf;
+void get_http_verb(char *request, char* verb) {
+  size_t nbytes = strcspn(request, " ");
+  strncpy((char*)verb, request, nbytes);
 }
 
 char *generate_response(char *contents, char *mime_type, char *verb) {
-  char header[1024] = "HTTP/1.1 200 OK\r\nContent-Type:";
+  char header[HEADER_SIZE] = "HTTP/1.1 200 OK\r\nContent-Type:";
   strcat(header, mime_type);
   size_t response_size = strlen(contents) + strlen(header);
   char *ptr_response = calloc(response_size, sizeof(char));
@@ -61,8 +61,8 @@ void handle_http_request(int fd) {
     exit(EXIT_FAILURE);
   }
 
-  static char verb[10] = {0};
-  get_http_verb(ptr_request, verb);
+  char verb[10] = {0};
+  get_http_verb(ptr_request, &verb[0]);
   char *file_content = calloc(FILE_MAX_SIZE, sizeof(char));
 
   if (!file_content) {

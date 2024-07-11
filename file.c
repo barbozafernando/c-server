@@ -10,7 +10,7 @@
 #include "file.h"
 
 const char *get_filename_from_request(char *request) {
-  const char *DEFAULT_FILENAME = "index.html";
+  const char* DEFAULT_FILENAME = "index.html";
   const char *filename = {0};
   size_t offset = 5;
 
