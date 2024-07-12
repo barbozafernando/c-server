@@ -28,11 +28,14 @@ int main() {
   socklen_t addr_size = sizeof(addr);
 
   fprintf(stdout, "Waiting for connections...\n");
-  client_fd = accept(sockfd, (struct sockaddr *)&addr, &addr_size);
-  fprintf(stdout, "Connected...\n");
-  handle_http_request(client_fd);
 
-  close(client_fd);
+  while(1) {
+    client_fd = accept(sockfd, (struct sockaddr *)&addr, &addr_size);
+    fprintf(stdout, "Connected...\n");
+    handle_http_request(client_fd);
+    close(client_fd);
+  }
+
   close(sockfd);
 
   return EXIT_SUCCESS;
