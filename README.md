@@ -1,1 +1,1 @@
-Web server from scratch for educational purposes
+Clone the repo and just type `make` that it might work.
