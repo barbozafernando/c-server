@@ -1,9 +1,18 @@
-CC=gcc
-CFLAGS=-Wall -Wextra -std=c11 -g
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c11 -g
+SRC = server.c http.c file.c mime.c
+OBJ = $(SRC:.c=.o)
+TARGET = server
 
-all:
-	$(CC) $(CFLAGS) -o server server.c http.c file.c mime.c
+all: $(TARGET)
 
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f server
+	rm -f $(OBJ) $(TARGET)
+
+.PHONY: all clean
