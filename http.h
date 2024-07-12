@@ -9,10 +9,10 @@
 #define MAX_QUEUED_REQUESTS  10
 #define HTTP_HEADER          "HTTP/1.1 200 OK\r\n";
 
-enum HTTP_STATUS_CODE {
+typedef enum {
   OK = 200,
   NOT_FOUND = 404,
-};
+} HttpStatusCode;
 
 void handle_http_request(int fd);
 void generate_response(char *contents, char* mime_type, char* verb);
