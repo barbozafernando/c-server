@@ -1,6 +1,8 @@
 #ifndef _HTTP_H_
 #define _HTTP_H_
 
+#include <stddef.h>
+
 #define SERVER_PORT          3000
 #define REQUEST_BUFFER_SIZE  65536 // 64K
 #define RESPONSE_BUFFER_SIZE 65536
@@ -13,8 +15,8 @@ enum HTTP_STATUS_CODE {
 };
 
 void handle_http_request(int fd);
-char *generate_response(char *contents, char* mime_type, char* verb);
+void generate_response(char *contents, char* mime_type, char* verb);
 void get_http_verb(char *request, char *verb);
-void send_response(int fd, char *response, int response_length);
+void send_response(int fd, char *response, size_t response_length);
 
 #endif
