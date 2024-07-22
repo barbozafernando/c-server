@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -g
+CFLAGS = -Wall -Wextra -std=c17 -g
 SRC = server.c http.c file.c mime.c
 OBJ = $(SRC:.c=.o)
 TARGET = server

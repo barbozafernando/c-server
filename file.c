@@ -15,7 +15,7 @@ void get_filename_from_request(char *request, const char *bfilename) {
 
   assert(bfilename != NULL);
 
-  char *s = request + offset;
+  char* s = request + offset;
 
   if (s[0] == 32) {
     strncpy((char*)bfilename, DEFAULT_FILENAME, strlen(DEFAULT_FILENAME));

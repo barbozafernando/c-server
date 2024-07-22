@@ -14,14 +14,15 @@
 #include "mime.h"
 
 #define HEADER_SIZE 1048576 // 1MB
+#define VERB_SIZE 10
 
-void get_http_verb(char *request, char* verb) {
+void get_http_verb(char* request, char* verb) {
   size_t nbytes = strcspn(request, " ");
   assert(verb != NULL);
   strncpy((char*)verb, request, nbytes);
 }
 
-void generate_response(char *contents, char *mime_type, char *bres) {
+void generate_response(char* contents, char* mime_type, char* bres) {
   char header[HEADER_SIZE] = "HTTP/1.1 200 OK\r\nContent-Type:";
   strcat(header, mime_type);
 
@@ -32,7 +33,7 @@ void generate_response(char *contents, char *mime_type, char *bres) {
   strcat(bres, contents);
 };
 
-void send_response(int fd, char *response, size_t response_length) {
+void send_response(int fd, char* response, size_t response_length) {
   int bytes_sent = send(fd, response, response_length, 0);
 
   assert(response != NULL);
@@ -43,7 +44,7 @@ void send_response(int fd, char *response, size_t response_length) {
 }
 
 void handle_http_request(int fd) {
-  char *ptr_request = calloc(REQUEST_BUFFER_SIZE, sizeof(char));
+  char* ptr_request = calloc(REQUEST_BUFFER_SIZE, sizeof(char));
 
   if (!ptr_request) {
     perror("handle_http_request");
@@ -55,9 +56,9 @@ void handle_http_request(int fd) {
     perror("recv");
   }
 
-  char verb[10] = {0};
+  char verb[VERB_SIZE] = {0};
   get_http_verb(ptr_request, &verb[0]);
-  char *file_content_buf = calloc(FILE_MAX_SIZE, sizeof(char));
+  char* file_content_buf = calloc(FILE_MAX_SIZE, sizeof(char));
 
   if (!file_content_buf) {
     perror("handle_http_request");
@@ -65,12 +66,12 @@ void handle_http_request(int fd) {
 
   char mime_type[MIME_TYPE_SIZE] = {0};
   size_t response_size = HEADER_SIZE + strlen(file_content_buf);
-  char *response_buf = calloc(response_size, sizeof(char));
+  char* response_buf = calloc(response_size, sizeof(char));
   if (!response_buf) {
     perror("error response_buf mallocing memory");
   }
 
-  const char *filename_buf = calloc(FILENAME_MAX_SIZE, sizeof(char));
+  const char* filename_buf = calloc(FILENAME_MAX_SIZE, sizeof(char));
   if (!filename_buf) {
     perror("error filename_buf mallocing memory");
   }
@@ -80,7 +81,6 @@ void handle_http_request(int fd) {
     read_file(filename_buf, file_content_buf);
     get_mime_type(filename_buf, mime_type);
     generate_response(file_content_buf, mime_type, response_buf);
-
     send_response(fd, response_buf, strlen(response_buf));
   } else {
     perror("verb not implemented yet");
@@ -91,3 +91,4 @@ void handle_http_request(int fd) {
   free(response_buf);
   free((void*)filename_buf); 
 }
+
