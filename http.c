@@ -13,7 +13,7 @@
 #include "http.h"
 #include "mime.h"
 
-#define HEADER_SIZE 1024
+#define HEADER_SIZE 1048576 // 1MB
 
 void get_http_verb(char *request, char* verb) {
   size_t nbytes = strcspn(request, " ");
