@@ -63,7 +63,7 @@ void handle_http_request(int fd) {
     perror("handle_http_request");
   }
 
-  char mime_type[25] = {0};
+  char mime_type[MIME_TYPE_SIZE] = {0};
   size_t response_size = HEADER_SIZE + strlen(file_content_buf);
   char *response_buf = calloc(response_size, sizeof(char));
   if (!response_buf) {
