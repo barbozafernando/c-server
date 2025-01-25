@@ -3,7 +3,7 @@
 
 #include "mime.h"
 
-char *strlower(char *s) {
+char *strlower(char* s) {
   for (char *p = s; *p != '\0'; p++) {
     *p = tolower(*p);
   }
@@ -11,8 +11,8 @@ char *strlower(char *s) {
   return s;
 }
 
-void get_mime_type(const char *filename, char buf[]) {
-  char *ext = strrchr(filename, '.');
+void get_mime_type(const char* filename, char buf[]) {
+  char* ext = strrchr(filename, '.');
 
   if (ext == NULL) {
     strcpy(buf, DEFAULT_MIME_TYPE);

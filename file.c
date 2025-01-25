@@ -10,7 +10,7 @@
 
 #include "file.h"
 
-void get_filename_from_request(char *request, const char *bfilename) {
+void get_filename_from_request(char* request, const char* bfilename) {
   const char* DEFAULT_FILENAME = "pages/index.html";
   size_t offset = 5;
 
@@ -26,7 +26,7 @@ void get_filename_from_request(char *request, const char *bfilename) {
   strncpy((char*)bfilename, s, nbytes);
 }
 
-void read_file(const char *filename, char *bfile_content) {
+void read_file(const char* filename, char* bfile_content) {
   const char filename_not_found[] = "pages/404.html";
 
   assert(bfile_content != NULL);
