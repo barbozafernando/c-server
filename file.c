@@ -1,11 +1,12 @@
+#include <stdio.h>
 #include <fcntl.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include <assert.h>
+
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "file.h"
 

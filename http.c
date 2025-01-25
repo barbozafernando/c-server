@@ -1,13 +1,14 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
+#include <assert.h>
+
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <unistd.h>
-#include <assert.h>
 
 #include "file.h"
 #include "http.h"

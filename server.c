@@ -1,14 +1,15 @@
-#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <unistd.h>
+#include <arpa/inet.h>
 
 #include "http.h"
 
 int main() {
-  int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+  int sockfd    = socket(AF_INET, SOCK_STREAM, 0);
   uint16_t PORT = htons(SERVER_PORT);
 
   struct sockaddr_in addr = {AF_INET, PORT, {0}, {0}};
@@ -24,7 +25,7 @@ int main() {
 
   fprintf(stdout, "Listening on port: %d\n", SERVER_PORT);
 
-  int client_fd = {0};
+  int client_fd       = {0};
   socklen_t addr_size = sizeof(addr);
 
   fprintf(stdout, "Waiting for connections...\n");
