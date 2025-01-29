@@ -4,8 +4,8 @@
 #include <stddef.h>
 
 #define SERVER_PORT          3000
-#define REQUEST_BUFFER_SIZE  65536 // 64K
-#define RESPONSE_BUFFER_SIZE 65536
+#define REQUEST_BUFFER_SIZE  (64*1024)
+#define RESPONSE_BUFFER_SIZE (64*1024)
 #define MAX_QUEUED_REQUESTS  10
 #define HTTP_HEADER          "HTTP/1.1 200 OK\r\n";
 

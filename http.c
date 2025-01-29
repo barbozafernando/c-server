@@ -14,7 +14,7 @@
 #include "http.h"
 #include "mime.h"
 
-#define HEADER_SIZE 1048576 // 1MB
+#define HEADER_SIZE (1024*1024)
 #define VERB_SIZE 10
 
 void get_http_verb(char* request, char* verb) {
