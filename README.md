@@ -3,7 +3,6 @@
 - Make
 
 ## Build
-Linux:
 ```
 $ make
 ```
