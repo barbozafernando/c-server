@@ -1,15 +1,11 @@
 ## Requirements
-- GCC | MinGW
+- GCC
 - Make
 
 ## Build
 Linux:
 ```
 $ make
-```
-Windows:
-```
-$ mingw32-make.exe
 ```
 ## Usage
 ```
